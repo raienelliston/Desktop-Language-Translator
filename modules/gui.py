@@ -1,22 +1,32 @@
 import tkinter as tk
 
-class Window(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Translation Popup")
-        self.geometry("300x100")
-        self.resizable(False, False)
-        self.geometry("+100+100")
+class TranslationPopup:
+    def __init__(self, text, x, y, duration=5000):
+        self.root = tk.Tk()
+        self.text = text
+        self.x = x
+        self.y = y
+        self.duration = duration
+        self.setup_ui()
 
-        self.label = tk.Label(self, text="Hello World!")
-        self.label.pack(pady=10)
+    def setup_ui(self):
+        self.root.overrideredirect(True)  # Remove window decorations
+        self.root.geometry(f"+{self.x}+{self.y}")  # Position the window at the given coordinates
 
-        self.button = tk.Button(self, text="Close", command=self.destroy)
-        self.button.pack(pady=10)
-    def translate_window(self, text):
-        self.label.config(text=text)
-        self.mainloop()
+        label = tk.Label(self.root, text=self.text, bg='yellow', fg='black')
+        label.pack()
 
+    def show(self):
+        self.root.mainloop()
+
+    def hide(self):
+        self.root.destroy()
+
+# Example usage
 if __name__ == "__main__":
-    window = Window()
-    window.mainloop()
+    from pynput.mouse import Controller
+
+    mouse = Controller()
+
+    popup = TranslationPopup("Translated text example", mouse.position[0] + 10, mouse.position[1] + 30)
+    popup.show()

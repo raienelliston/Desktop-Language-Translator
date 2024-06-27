@@ -1,6 +1,8 @@
 import pytesseract
 from PIL import Image
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
 def find_text_in_image(image_path, isFile=True):
     if isFile:
         image = Image.open(image_path)
@@ -17,4 +19,5 @@ if __name__ == "__main__":
     def test():
         img = Image.open(capture_screen((500, 500)))
         img.save("screenshot.png")
-    print("text" + find_text_in_image(keybind_listen(test)))
+        print("text: " + find_text_in_image(capture_screen((500, 500)), isFile=True))
+    keybind_listen(test)
