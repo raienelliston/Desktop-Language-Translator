@@ -9,6 +9,7 @@ def translate_from_screen():
     text = find_text_in_image(capture_screen())
     return translate_text(text, 'es')
 
+
 def main():
     keybind_listen(translate_from_screen, keybind)
 
