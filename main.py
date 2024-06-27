@@ -1,32 +1,15 @@
-from pynput import keyboard
+from modules.keybind_detector import keybind_listen
+from modules.screen_capture import capture_screen
+from modules.translator import translate_text
+from modules.OCR import find_text_in_image
 
-keys_down = set()
+keybind = '<ctrl>+<alt>+h'
 
-def on_press(key):
-    try:
-        print('alphanumeric key {0} pressed'.format(
-            key.char))
-        keys_down.add(key.char)
-    except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
-        keys_down.add(key)
-
-def on_release(key):
-    print('{0} released'.format(
-        key))
-    keys_down.remove(key)
-    
-
-listener = keyboard.Listener(
-    on_press=on_press,
-    on_release=on_release
-)
+def translate_from_screen():
+    text = find_text_in_image(capture_screen())
+    return translate_text(text, 'es')
 
 def main():
-    listener.start()
-    while True:
-        print(str(keys_down))
+    keybind_listen(translate_from_screen, keybind)
 
-if __name__ == "__main__":
-    main()
+main()

@@ -1,6 +1,6 @@
 from pynput import keyboard
 
-def keybind_listen(func):
+def keybind_listen(func, keybind='<ctrl>+<alt>+h'):
     def on_activate():
         print('Global hotkey activated!')
 
