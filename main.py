@@ -8,17 +8,23 @@ from pynput.mouse import Controller
 
 keybind = '<ctrl>+<alt>+h'
 mouse = Controller()
+language = 'fr'
+
+def show_translation(text):
+    print(text)
+    popup = TranslationPopup(text, mouse.position[0], mouse.position[1])
+    popup.show()
 
 def translate_from_screen():
     img = Image.open(capture_screen((500, 500)))
     img.save("screenshot.png")
-    print("text: " + find_text_in_image(capture_screen((500, 500)), isFile=True))
+    text = find_text_in_image(capture_screen((500, 50)), isFile=True), language
+    print("text: " + str(text))
+    print(translate(str(text), language))
+    popup = TranslationPopup(translate(str(text), language), mouse.position[0], mouse.position[1])
 
-def show_translation(text):
-    popup = TranslationPopup(text, mouse.position[0], mouse.position[1])
-    popup.show()
 
 def main():
-    keybind_listen(show_translation(translate_from_screen), keybind)
+    keybind_listen(translate_from_screen)
 
 main()
