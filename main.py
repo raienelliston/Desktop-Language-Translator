@@ -18,11 +18,12 @@ def show_translation(text):
 def translate_from_screen():
     img = Image.open(capture_screen((500, 500)))
     img.save("screenshot.png")
-    text = find_text_in_image(capture_screen((500, 50)), isFile=True), language
+    text = find_text_in_image(capture_screen((500, 50)), isFile=True)
     print("text: " + str(text))
-    print(translate(str(text), language))
-    popup = TranslationPopup(translate(str(text), language), mouse.position[0], mouse.position[1])
-
+    translated_text = translate(str(text), language)
+    print(translated_text)
+    popup = TranslationPopup(translated_text, mouse.position[0], mouse.position[1])
+    popup.show()
 
 def main():
     keybind_listen(translate_from_screen)
