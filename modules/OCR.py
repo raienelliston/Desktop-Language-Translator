@@ -3,12 +3,12 @@ from PIL import Image
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def find_text_in_image(image_path, isFile=True):
+def find_text_in_image(image_path, isFile=True, lang='eng+chi_sim+jap'):
     if isFile:
         image = Image.open(image_path)
     else:
         image = Image.open(image_path)
-    text = pytesseract.image_to_string(image)
+    text = pytesseract.image_to_string(image, lang=lang)
     return text
 
 if __name__ == "__main__":

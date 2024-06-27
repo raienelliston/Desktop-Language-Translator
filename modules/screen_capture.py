@@ -8,6 +8,13 @@ def capture_screen(size=(100, 100)):
     screenshot.save("screenshot.png")
     return "screenshot.png"
 
+def capture_screen_region(region):
+    x, y = region[0], region[1]
+    width, height = region[2] - region[0], region[3] - region[1]
+    screenshot = pyautogui.screenshot(region=(x, y, width, height))
+    screenshot.save("screenshot.png")
+    return "screenshot.png"
+
 if __name__ == "__main__":
     from PIL import Image
     from keybind_detector import keybind_listen
