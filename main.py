@@ -34,8 +34,6 @@ def main():
     def translate_from_region():
         region = select_screen_region()
         if region:
-            img = Image.open(capture_screen_region(region))
-            img.save("screenshot.png")
             text = find_text_in_image(capture_screen_region(region), isFile=True)
             print("text: " + str(text))
             translated_text = translate(str(text), language)

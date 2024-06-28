@@ -1,21 +1,14 @@
 # Main window with options and settings, along with a start button to start the rest of the application
 import tkinter as tk
 
-def get_languages():
-    try:
-        with open("languages.txt", "r") as languages_file:
-            languages = [language.strip() for language in languages_file]
-    except FileNotFoundError:
-        print("No languages file found, using default languages")
-        languages = ["english", "french", "spanish", "dutch", "italian", "chinese (simplified)"]
-    return languages
+languages = ["english", "chinese (simplified)", "afrikaans", "albanian", "amharic", "arabic", "armenian", "assamese", "ayamara", "azerbaijani", "bambara", "basque", "belarusian", "bengali", "bhojpuri", "bosnian", "bulgarian", "catalan", "cebuano", "chichewa", "chinese (simplified)", "chinese (traditional)", "corsican", "croatian", "czech", "danish", "dhivehi", "dogri", "dutch", "english", "esperanto", "estonian", "filipino", "finnish", "french", "frisian", "galician", "georgian", "german", "greek", "guarani", "gujarati", "haitian creole", "hausa", "hawaiian", "hebrew", "hindi", "hmong", "hungarian", "icelandic", "igbo", "ilocano", "indonesian", "irish", "italian", "japanese", "javanese", "kannada", "kazakh", "khmer", "kinyarwanda", "konkani", "korean", "krio", "kurdish (kurmanji)", "kurdish (sorani)", "kyrgyz", "lao", "latin", "latvian", "lingala", "lithuanian", "luganda", "luxembourgish", "macedonian", "maithili", "malagasy", "malay", "malayalam", "maltese", "maori", "marathi", "meiteilon (manipuri)", "mni-Mtei", "mizo", "mongolian", "myanmar", "nepali", "norwegian", "odia (oriya)", "oromo", "pashto", "persian", "polish", "portuguese", "punjabi", "quechua", "romanian", "russian", "samoan", "sanskrit", "scots gaelic", "sepedi", "serbian", "sesotho", "shona", "sindhi", "sinhala", "slovak", "slovenian", "somali", "spanish", "sundanese", "swahili", "swedish", "tajik", "tamil", "tatar", "telugu", "thai", "tigrinya", "tsonga", "turkish", "turkmen", "twi", "ukrainian", "urdu", "uyghur", "uzbek", "vietnamese", "welsh", "xhosa", "yiddish", "yoruba", "zulu"]
 
 class MainWindow:
     def __init__(self, root, start_callback):
         self.root = root
         self.root.title("Screen Translator Configuration")
         self.start_callback = start_callback
-        self.languages_list = get_languages()  # Add more languages as needed
+        self.languages_list = languages # Add more languages as needed
         self.create_widgets()
         self.load_settings()
 
@@ -73,6 +66,11 @@ class MainWindow:
                     settings[key] = value
         except FileNotFoundError:
             print("No settings file found, using default settings")
+            settings = {
+                "languages": "english",
+                "main_keybind": "<ctrl>+<alt>+h",
+                "kill_keybind": "<ctrl>+<alt>+k"
+            }
 
         return settings
     

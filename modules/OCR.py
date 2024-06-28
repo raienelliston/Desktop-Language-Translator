@@ -5,11 +5,7 @@ from PIL import Image
 # Set the path to the tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def find_text_in_image(image_path, isFile=True, lang='eng+chi_sim+jap'):
-    if isFile:
-        image = Image.open(image_path)
-    else:
-        image = Image.open(image_path)
+def find_text_in_image(image, isFile=True, lang='eng+chi_sim+jap'):
     text = pytesseract.image_to_string(image, lang=lang)
     return text
 
