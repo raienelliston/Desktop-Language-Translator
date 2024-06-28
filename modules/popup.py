@@ -1,9 +1,9 @@
 import tkinter as tk
 
 class TranslationPopup:
-    def __init__(self, text, x, y, duration=5000):
+    def __init__(self, root, text, x, y, duration=5000):
         print(f"Initializing popup at ({x}, {y}) with text: {text}")
-        self.root = tk.Tk()
+        self.root = root
         self.text = text
         self.x = x
         self.y = y
@@ -11,17 +11,17 @@ class TranslationPopup:
         self.setup_ui()
 
     def setup_ui(self):
-        self.root.overrideredirect(True)  # Remove window decorations
-        self.root.geometry(f"+{self.x}+{self.y}")  # Position the window at the given coordinates
-        self.root.attributes("-topmost", True)  # Keep the window on top
+        self.root.overrideredirect(True)
+        self.root.geometry(f"+{self.x}+{self.y}")
+        self.root.attributes("-topmost", True)
 
         label = tk.Label(self.root, text=self.text, bg='yellow', fg='black')
         label.pack()
 
     def show(self):
         print("Showing popup...")
-        self.root.after(self.duration, self.hide)  # Close the window after the specified duration
-        self.root.grab_set()  # Make the window modal
+        self.root.after(self.duration, self.hide)
+        self.root.grab_set()
         self.root.mainloop()
 
     def hide(self):

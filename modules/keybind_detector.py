@@ -5,7 +5,7 @@ def keybind_listen(func, keybind='<ctrl>+<alt>+h'):
         return lambda k: f(l.canonical(k))
 
     hotkey = keyboard.HotKey(
-        keyboard.HotKey.parse('<ctrl>+<alt>+h'),
+        keyboard.HotKey.parse(keybind),
         func)
     with keyboard.Listener(
             on_press=for_canonical(hotkey.press),

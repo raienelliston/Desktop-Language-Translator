@@ -1,23 +1,30 @@
 import tkinter as tk
-from tkinter import ttk
 
 class MainWindow:
-    def __init__(self, root, save_callback, start_callback):
+    def __init__(self, root, start_callback):
         self.root = root
         self.root.title("Screen Translator Configuration")
-        self.save_callback = save_callback
         self.start_callback = start_callback
+        self.languages_list = ["eng", "fra", "spa", "deu", "ita"]
         self.create_widgets()
         self.load_settings()
 
     def create_widgets(self):
         # OCR Languages Selection
-        self.language_label = tk.Label(self.root, text="OCR Languages (e.g., eng+fra):")
+        self.language_label = tk.Label(self.root, text="OCR Languages:")
         self.language_label.grid(row=0, column=0, padx=10, pady=10)
-        self.language_entry = tk.Entry(self.root, width=30)
-        self.language_entry.grid(row=0, column=1, padx=10, pady=10)
+        
+        self.language_listbox = tk.Listbox(self.root, selectmode=tk.SINGLE, exportselection=0)
+        for language in self.languages_list:
+            self.language_listbox.insert(tk.END, language)
+        self.language_listbox.grid(row=0, column=1, padx=10, pady=10)
 
-        # Keybind Configuration
+        # Scrollbar
+        self.scrollbar = tk.Scrollbar(self.root, orient=tk.VERTICAL, command=self.language_listbox.yview)
+        self.language_listbox.config(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.grid(row=0, column=2, sticky='ns')
+
+        # Keybind Entry
         self.keybind_label = tk.Label(self.root, text="Keybind (e.g., <ctrl>+<alt>+h):")
         self.keybind_label.grid(row=1, column=0, padx=10, pady=10)
         self.keybind_entry = tk.Entry(self.root, width=30)
@@ -25,17 +32,19 @@ class MainWindow:
 
         # Save Button
         self.save_button = tk.Button(self.root, text="Save Settings", command=self.save_settings)
-        self.save_button.grid(row=2, column=0, columnspan=2, pady=10)
+        self.save_button.grid(row=2, column=0, columnspan=3, pady=10)
 
         # Start Button
         self.start_button = tk.Button(self.root, text="Start", command=self.start_application)
-        self.start_button.grid(row=3, column=0, columnspan=2, pady=10)
+        self.start_button.grid(row=3, column=0, columnspan=3, pady=10)
 
         # Alert Label
         self.alert_label = tk.Label(self.root, text="", fg='red')
         self.alert_label.grid(row=2, column=1, pady=10, padx=10)
 
     def start_application(self):
+        self.save_settings()
+        self.root.destroy()
         self.start_callback()
 
     def _read_settings_file(self):
@@ -56,11 +65,19 @@ class MainWindow:
         languages = settings.get("languages", "")
         keybind = settings.get("keybind", "")
 
-        self.language_entry.insert(0, languages)
+        if languages in self.languages_list:
+            idx = self.languages_list.index(languages)
+            self.language_listbox.select_set(idx)
+
         self.keybind_entry.insert(0, keybind)
 
     def save_settings(self):
-        languages = self.language_entry.get()
+        selected_languages = [self.languages_list[idx] for idx in self.language_listbox.curselection()]
+        if selected_languages:
+            languages = selected_languages[0]
+        else:
+            languages = ""
+
         keybind = self.keybind_entry.get()
 
         if not languages or not keybind:
@@ -78,8 +95,12 @@ class MainWindow:
 
         self.alert_label.config(text="Settings saved successfully")
         self.root.after(2000, lambda: self.alert_label.config(text=""))
-    
-    
+
+    def mainloop(self):
+        self.root.mainloop()
+
+    def destroy(self):
+        self.root.destroy()
 
 
 def load_settings():
@@ -103,5 +124,5 @@ if __name__ == "__main__":
         print("Application started")
 
     root = tk.Tk()
-    app = MainWindow(root, save_settings, start_application)
+    app = MainWindow(root, start_application)
     root.mainloop()

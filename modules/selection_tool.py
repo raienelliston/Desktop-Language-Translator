@@ -4,10 +4,9 @@ class SelectionTool:
     def __init__(self):
         self.root = tk.Tk()
         self.root.attributes('-fullscreen', True)
-        self.root.attributes('-alpha', 0.3)  # Make the window semi-transparent
+        self.root.attributes('-alpha', 0.3)
         self.root.configure(background='black')
-        self.root.attributes("-topmost", True)  # Keep the window on top
-
+        self.root.attributes("-topmost", True)
 
         self.start_x = None
         self.start_y = None
