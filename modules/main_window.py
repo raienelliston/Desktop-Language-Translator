@@ -2,6 +2,7 @@ import tkinter as tk
 
 class MainWindow:
     def __init__(self, root, start_callback):
+    def __init__(self, root, start_callback):
         self.root = root
         self.root.title("Screen Translator Configuration")
         self.start_callback = start_callback
@@ -11,6 +12,7 @@ class MainWindow:
 
     def create_widgets(self):
         # OCR Languages Selection
+        self.language_label = tk.Label(self.root, text="OCR Languages:")
         self.language_label = tk.Label(self.root, text="OCR Languages:")
         self.language_label.grid(row=0, column=0, padx=10, pady=10)
         
@@ -33,9 +35,11 @@ class MainWindow:
         # Save Button
         self.save_button = tk.Button(self.root, text="Save Settings", command=self.save_settings)
         self.save_button.grid(row=2, column=0, columnspan=3, pady=10)
+        self.save_button.grid(row=2, column=0, columnspan=3, pady=10)
 
         # Start Button
         self.start_button = tk.Button(self.root, text="Start", command=self.start_application)
+        self.start_button.grid(row=3, column=0, columnspan=3, pady=10)
         self.start_button.grid(row=3, column=0, columnspan=3, pady=10)
 
         # Alert Label
@@ -43,6 +47,8 @@ class MainWindow:
         self.alert_label.grid(row=2, column=1, pady=10, padx=10)
 
     def start_application(self):
+        self.save_settings()
+        self.root.destroy()
         self.save_settings()
         self.root.destroy()
         self.start_callback()
@@ -69,9 +75,19 @@ class MainWindow:
             idx = self.languages_list.index(languages)
             self.language_listbox.select_set(idx)
 
+        if languages in self.languages_list:
+            idx = self.languages_list.index(languages)
+            self.language_listbox.select_set(idx)
+
         self.keybind_entry.insert(0, keybind)
 
     def save_settings(self):
+        selected_languages = [self.languages_list[idx] for idx in self.language_listbox.curselection()]
+        if selected_languages:
+            languages = selected_languages[0]
+        else:
+            languages = ""
+
         selected_languages = [self.languages_list[idx] for idx in self.language_listbox.curselection()]
         if selected_languages:
             languages = selected_languages[0]
@@ -102,6 +118,12 @@ class MainWindow:
     def destroy(self):
         self.root.destroy()
 
+    def mainloop(self):
+        self.root.mainloop()
+
+    def destroy(self):
+        self.root.destroy()
+
 
 def load_settings():
     settings = {}
@@ -124,5 +146,6 @@ if __name__ == "__main__":
         print("Application started")
 
     root = tk.Tk()
+    app = MainWindow(root, start_application)
     app = MainWindow(root, start_application)
     root.mainloop()
