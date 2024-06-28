@@ -22,10 +22,12 @@ def main():
         print("No settings file found, using default settings")
         settings = {
             "languages": "en",
-            "keybind": "crtl+alt+h"
+            "main_keybind": "crtl+alt+h",
+            "kill_keybind": "crtl+alt+k"
         }
 
-    keybind = settings['keybind']
+    main_keybind = settings['main_keybind']
+    kill_keybind = settings['kill_keybind']
     language = settings['languages']
 
     # def translate_from_screen():
@@ -50,15 +52,9 @@ def main():
             popup = TranslationPopup(root, translated_text, mouse.position[0], mouse.position[1])
             popup.show()
 
-    def quit():
-        print("Quitting...")
-        root.quit()
-        root.destroy()
-        exit()
-
     def monitor_to_translate():
         print("Monitoring for keybind...")
-        keybind_listen(translate_from_region, '<ctrl>+<alt>+h', '<ctrl>+<alt>+k')
+        keybind_listen(translate_from_region, main_keybind, kill_keybind)
 
 
     monitor_to_translate()

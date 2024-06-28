@@ -11,13 +11,19 @@ def keybind_listen(func, main_keybind='<ctrl>+<alt>+h', kill_keybind='<ctrl>+<al
     kill_hotkey = keyboard.HotKey(
         keyboard.HotKey.parse(kill_keybind),
         lambda: exit())
+    
+    def press(k):
+        main_hotkey.press(k)
+        kill_hotkey.press(k)
+
+    def release(k):
+        main_hotkey.release(k)
+        kill_hotkey.release(k)
 
     l = keyboard.Listener(
-            on_press=for_canonical(main_hotkey.press),
-            on_release=for_canonical(main_hotkey.release))
+            on_press=for_canonical(press),
+            on_release=for_canonical(release))
     
-    main_hotkey.start()
-    kill_hotkey.start()
     l.start()
     l.join()
 

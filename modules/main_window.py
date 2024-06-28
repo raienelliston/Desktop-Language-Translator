@@ -1,11 +1,20 @@
 import tkinter as tk
 
+def get_languages():
+    try:
+        with open("languages.txt", "r") as languages_file:
+            languages = [language.strip() for language in languages_file]
+    except FileNotFoundError:
+        print("No languages file found, using default languages")
+        languages = ["english", "french", "spanish", "dutch", "italian", "chinese (simplified)"]
+    return languages
+
 class MainWindow:
     def __init__(self, root, start_callback):
         self.root = root
         self.root.title("Screen Translator Configuration")
         self.start_callback = start_callback
-        self.languages_list = ["english", "french", "spanish", "dutch", "italian", "chinese (simplified)"]  # Add more languages as needed
+        self.languages_list = get_languages()  # Add more languages as needed
         self.create_widgets()
         self.load_settings()
 
@@ -25,23 +34,29 @@ class MainWindow:
         self.language_listbox.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.grid(row=0, column=2, sticky='ns')
 
-        # Keybind Configuration
-        self.keybind_label = tk.Label(self.root, text="Keybind (e.g., <ctrl>+<alt>+h):")
-        self.keybind_label.grid(row=1, column=0, padx=10, pady=10)
-        self.keybind_entry = tk.Entry(self.root, width=30)
-        self.keybind_entry.grid(row=1, column=1, padx=10, pady=10)
+        # Main Keybind Configuration
+        self.main_keybind_label = tk.Label(self.root, text="Keybind (e.g., <ctrl>+<alt>+h):")
+        self.main_keybind_label.grid(row=1, column=0, padx=10, pady=10)
+        self.main_keybind_entry = tk.Entry(self.root, width=30)
+        self.main_keybind_entry.grid(row=1, column=1, padx=10, pady=10)
+
+        # Kill Keybind Configuration
+        self.kill_keybind_label = tk.Label(self.root, text="Kill Keybind (e.g., <ctrl>+<alt>+k):")
+        self.kill_keybind_label.grid(row=2, column=0, padx=10, pady=10)
+        self.kill_keybind_entry = tk.Entry(self.root, width=30)
+        self.kill_keybind_entry.grid(row=2, column=1, padx=10, pady=10)
 
         # Save Button
         self.save_button = tk.Button(self.root, text="Save Settings", command=self.save_settings)
-        self.save_button.grid(row=2, column=0, columnspan=3, pady=10)
+        self.save_button.grid(row=3, column=0, columnspan=3, pady=10)
 
         # Start Button
         self.start_button = tk.Button(self.root, text="Start", command=self.start_application)
-        self.start_button.grid(row=3, column=0, columnspan=3, pady=10)
+        self.start_button.grid(row=4, column=0, columnspan=3, pady=10)
 
         # Alert Label
         self.alert_label = tk.Label(self.root, text="", fg='red')
-        self.alert_label.grid(row=2, column=1, pady=10, padx=10)
+        self.alert_label.grid(row=3, column=1, pady=10, padx=10)
 
     def start_application(self):
         self.save_settings()
@@ -64,13 +79,15 @@ class MainWindow:
         settings = self._read_settings_file()
 
         languages = settings.get("languages", "")
-        keybind = settings.get("keybind", "")
+        main_keybind = settings.get("main_keybind", "")
+        kill_keybind = settings.get("kill_keybind", "")
 
         if languages in self.languages_list:
             idx = self.languages_list.index(languages)
             self.language_listbox.select_set(idx)
 
-        self.keybind_entry.insert(0, keybind)
+        self.main_keybind_entry.insert(0, main_keybind)
+        self.kill_keybind_entry.insert(0, kill_keybind)
 
     def save_settings(self):
         selected_languages = [self.languages_list[idx] for idx in self.language_listbox.curselection()]
@@ -79,15 +96,17 @@ class MainWindow:
         else:
             languages = ""
 
-        keybind = self.keybind_entry.get()
+        main_keybind = self.main_keybind_entry.get()
+        kill_keybind = self.kill_keybind_entry.get()
 
-        if not languages or not keybind:
+        if not languages or not main_keybind or not kill_keybind:
             self.alert_label.config(text="Please fill in all fields")
             return
 
         settings = {
             "languages": languages,
-            "keybind": keybind
+            "main_keybind": main_keybind,
+            "kill_keybind": kill_keybind
         }
 
         with open("settings.txt", "w") as settings_file:

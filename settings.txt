@@ -1,2 +1,3 @@
-languages=chinese (simplified)
-keybind=asdf
+languages=test fail
+main_keybind=<ctrl>+<alt>+h
+kill_keybind=<ctrl>+<alt>+d
