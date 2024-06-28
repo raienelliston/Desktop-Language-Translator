@@ -1,2 +1,2 @@
-languages='en'
+languages=spa
 keybind=asdf

@@ -2,11 +2,12 @@ from modules.keybind_detector import keybind_listen
 from modules.screen_capture import capture_screen, capture_screen_region
 from modules.translator import translate
 from modules.OCR import find_text_in_image
-from modules.gui import TranslationPopup
+from modules.popup import TranslationPopup
 from modules.selection_tool import select_screen_region
 from modules.main_window import MainWindow
 from PIL import Image
 from pynput.mouse import Controller
+import tkinter as tk
 
 settings = {}
 mouse = Controller()
@@ -28,7 +29,7 @@ language = settings['languages']
 
 def show_translation(text):
     print(text)
-    popup = TranslationPopup(text, mouse.position[0], mouse.position[1])
+    popup = TranslationPopup(root, text, mouse.position[0], mouse.position[1])
     popup.show()
 
 def translate_from_screen():
@@ -38,7 +39,7 @@ def translate_from_screen():
     print("text: " + str(text))
     translated_text = translate(str(text), language)
     print(translated_text)
-    popup = TranslationPopup(translated_text, mouse.position[0], mouse.position[1])
+    popup = TranslationPopup(root, translated_text, mouse.position[0], mouse.position[1])
     popup.show()
 
 def translate_from_region():
@@ -50,13 +51,29 @@ def translate_from_region():
         print("text: " + str(text))
         translated_text = translate(str(text), language)
         print(translated_text)
-        popup = TranslationPopup(translated_text, mouse.position[0], mouse.position[1])
+        popup = TranslationPopup(root, translated_text, mouse.position[0], mouse.position[1])
         popup.show()
 
-main_window = MainWindow(keybind_listen(translate_from_region))
+def quit():
+    print("Quitting...")
+    root.quit()
+    root.destroy()
+    exit()
+
+def monitor_to_translate():
+    print("Monitoring for keybind...")
+    keybind_listen(translate_from_screen, '<ctrl>+<alt>+h')
+
+def monitor_to_kill():
+    print("Monitoring for keybind...")
+    keybind_listen(quit, '<ctrl>+<alt>+k')
 
 def main():
-    # keybind_listen(translate_from_screen)
-    pass
+    monitor_to_translate()
+    monitor_to_kill()
 
-main()
+    
+root = tk.Tk()
+
+app = MainWindow(root, main)
+app.mainloop()
