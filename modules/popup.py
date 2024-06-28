@@ -3,7 +3,7 @@ import tkinter as tk
 class TranslationPopup:
     def __init__(self, root, text, x, y, duration=5000):
         print(f"Initializing popup at ({x}, {y}) with text: {text}")
-        self.root = root
+        self.root = tk.Tk()
         self.text = text
         self.x = x
         self.y = y

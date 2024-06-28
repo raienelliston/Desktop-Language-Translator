@@ -1,2 +1,2 @@
-languages=spa
+languages=chinese (simplified)
 keybind=asdf

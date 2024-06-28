@@ -1,16 +1,25 @@
 from pynput import keyboard
 
-def keybind_listen(func, keybind='<ctrl>+<alt>+h'):
+def keybind_listen(func, main_keybind='<ctrl>+<alt>+h', kill_keybind='<ctrl>+<alt>+k'):
     def for_canonical(f):
         return lambda k: f(l.canonical(k))
 
-    hotkey = keyboard.HotKey(
-        keyboard.HotKey.parse(keybind),
+    main_hotkey = keyboard.HotKey(
+        keyboard.HotKey.parse(main_keybind),
         func)
-    with keyboard.Listener(
-            on_press=for_canonical(hotkey.press),
-            on_release=for_canonical(hotkey.release)) as l:
-        l.join()
+    
+    kill_hotkey = keyboard.HotKey(
+        keyboard.HotKey.parse(kill_keybind),
+        lambda: exit())
+
+    l = keyboard.Listener(
+            on_press=for_canonical(main_hotkey.press),
+            on_release=for_canonical(main_hotkey.release))
+    
+    main_hotkey.start()
+    kill_hotkey.start()
+    l.start()
+    l.join()
 
 def on_release(key):
     def for_canonical(f):
