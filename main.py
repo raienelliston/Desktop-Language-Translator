@@ -4,12 +4,27 @@ from modules.translator import translate
 from modules.OCR import find_text_in_image
 from modules.gui import TranslationPopup
 from modules.selection_tool import select_screen_region
+from modules.main_window import MainWindow
 from PIL import Image
 from pynput.mouse import Controller
 
-keybind = '<ctrl>+<alt>+h'
+settings = {}
 mouse = Controller()
-language = 'en'
+
+try:
+    with open("settings.txt", "r") as settings_file:
+        for line in settings_file:
+            key, value = line.strip().split("=")
+            settings[key] = value
+except FileNotFoundError:
+    print("No settings file found, using default settings")
+    settings = {
+        "languages": "en",
+        "keybind": "crtl+alt+h"
+    }
+
+keybind = settings['keybind']
+language = settings['languages']
 
 def show_translation(text):
     print(text)
@@ -38,8 +53,10 @@ def translate_from_region():
         popup = TranslationPopup(translated_text, mouse.position[0], mouse.position[1])
         popup.show()
 
+main_window = MainWindow(keybind_listen(translate_from_region))
+
 def main():
     # keybind_listen(translate_from_screen)
-    keybind_listen(translate_from_region)
+    pass
 
 main()
