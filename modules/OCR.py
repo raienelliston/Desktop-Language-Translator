@@ -1,6 +1,8 @@
+# Extracts the text out of a .png image file
 import pytesseract
 from PIL import Image
 
+# Set the path to the tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def find_text_in_image(image_path, isFile=True, lang='eng+chi_sim+jap'):

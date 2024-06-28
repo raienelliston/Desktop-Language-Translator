@@ -1,3 +1,4 @@
+# Captures the screen from a specified size/region and outputs a .png
 import pyautogui
 
 def capture_screen(size=(100, 100)):

@@ -1,3 +1,4 @@
+# Main window with options and settings, along with a start button to start the rest of the application
 import tkinter as tk
 
 def get_languages():

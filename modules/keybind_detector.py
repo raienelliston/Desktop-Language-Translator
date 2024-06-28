@@ -1,3 +1,4 @@
+# Detects keybinds and executes a function or kills the listener when a keybind is detected 
 from pynput import keyboard
 
 def keybind_listen(func, main_keybind='<ctrl>+<alt>+h', kill_keybind='<ctrl>+<alt>+k'):

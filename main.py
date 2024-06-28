@@ -1,5 +1,5 @@
 from modules.keybind_detector import keybind_listen
-from modules.screen_capture import capture_screen, capture_screen_region
+from modules.screen_capture import capture_screen_region
 from modules.translator import translate
 from modules.OCR import find_text_in_image
 from modules.popup import TranslationPopup
@@ -26,19 +26,10 @@ def main():
             "kill_keybind": "crtl+alt+k"
         }
 
+    # Load settings
     main_keybind = settings['main_keybind']
     kill_keybind = settings['kill_keybind']
     language = settings['languages']
-
-    # def translate_from_screen():
-    #     img = Image.open(capture_screen((500, 500)))
-    #     img.save("screenshot.png")
-    #     text = find_text_in_image(capture_screen((500, 50)), isFile=True)
-    #     print("text: " + str(text))
-    #     translated_text = translate(str(text), language)
-    #     print(translated_text)
-    #     popup = TranslationPopup(root, translated_text, mouse.position[0], mouse.position[1])
-    #     popup.show()
 
     def translate_from_region():
         region = select_screen_region()
@@ -56,10 +47,9 @@ def main():
         print("Monitoring for keybind...")
         keybind_listen(translate_from_region, main_keybind, kill_keybind)
 
-
     monitor_to_translate()
 
-root = tk.Tk()
 
+root = tk.Tk()
 app = MainWindow(root, main)
 app.mainloop()

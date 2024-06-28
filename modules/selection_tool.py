@@ -1,3 +1,4 @@
+# Makes the screen semi-transparent and allows the user to select a region on the screen by dragging the mouse. The selected region is returned as a tuple of (x1, y1, x2, y2) coordinates. This is useful for selecting a region on the screen to capture or perform OCR on. This module is used in the main.py script to select a region on the screen to capture and translate text from.
 import tkinter as tk
 
 class SelectionTool:
@@ -8,17 +9,19 @@ class SelectionTool:
         self.root.configure(background='black')
         self.root.attributes("-topmost", True)
 
+        # Coordinate Variables
         self.start_x = None
         self.start_y = None
         self.rect = None
 
+        # Canvas
         self.canvas = tk.Canvas(self.root, cursor="cross")
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.canvas.bind("<ButtonPress-1>", self.on_button_press)
         self.canvas.bind("<B1-Motion>", self.on_mouse_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_button_release)
-
+        
         self.selected_region = None
 
     def on_button_press(self, event):

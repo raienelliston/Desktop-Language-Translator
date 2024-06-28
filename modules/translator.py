@@ -1,3 +1,4 @@
+# Translate text using Google Translate API
 from deep_translator import GoogleTranslator
 
 def translate_segment(text, language='en'):
@@ -8,16 +9,17 @@ def translate_segment(text, language='en'):
         print(f"Error translating segment: {e}")
         return None
 
-def translate(text, language):
-    
-    segments = text.split('\n')
-    translated_segments = []
-    for segment in segments:
-        translated_segment = translate_segment(segment, language)
-        if translated_segment:
-            translated_segments.append(translated_segment)
-    translated_text = '\n'.join(translated_segments)
+def translate(text, language, ignore=["\n", "_"]):
+    for char in ignore:
+        text = text.replace(char, " ." + char + ". ")
+    print(text)
+
+    translated_text = GoogleTranslator(source='auto', target=language).translate(text)
+    print(translated_text)
+    for char in ignore:
+        translated_text = translated_text.replace(" ." + char + ". ", char)
+
     return translated_text
 
 if __name__ == "__main__":
-    translate("Hello World!", 'es')
+    translate("asldfkjasdflajksdf_asdlfjas;dlfkjasdf_a__as;ldfkjas;dlf\n\n", 'es')
