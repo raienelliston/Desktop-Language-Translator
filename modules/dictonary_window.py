@@ -1,5 +1,7 @@
 import tkinter as tk
-from sqliteDictonary import sqlite_database as db
+from sqliteDictionary.sqlite_dictionary import sqliteDictionary 
+
+db = sqliteDictionary("english")
 
 class DictionaryWindow:
     def __init__(self, root, text, x, y):
@@ -17,6 +19,32 @@ class DictionaryWindow:
 
         label = tk.Label(self.root, text=self.text, bg='yellow', fg='black')
         label.pack()
+
+        # Display definitions
+        frame_definitions = tk.Frame(self.root)
+        frame_definitions.pack()
+
+        for definition in self.definitions:
+            word, meaning, wordtype, example, synonyms, antonyms = definition
+            label = tk.Label(frame_definitions, text=f"{word} ({wordtype}): {meaning}")
+            label.pack()
+
+            if example:
+                label = tk.Label(frame_definitions, text=f"Example: {example}")
+                label.pack()
+
+            if synonyms:
+                label = tk.Label(frame_definitions, text=f"Synonyms: {synonyms}")
+                label.pack()
+
+            if antonyms:
+                label = tk.Label(frame_definitions, text=f"Antonyms: {antonyms}")
+                label.pack()
+
+
+
+    def select_word(self, event):
+        pass
 
     def show(self):
         print("Showing popup...")

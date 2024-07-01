@@ -4,7 +4,7 @@ import re
 
 split_charachters = "{[(!,.:;?])]}"
 
-class sqliteDictonary:
+class sqliteDictionary:
     def __init__(self, language, user_version=1):
         self.language = language
         db_folder = os.path.join(os.path.dirname(__file__), 'databases')        
@@ -58,11 +58,11 @@ class sqliteDictonary:
         return self.cursor.fetchall()
     
     def search_sentance(self, sentance):
-        translated_sentance = []
+        translated_sentance = {}
         for section in sentance.split():
             for word in re.split(split_charachters, section):
                 self.cursor.execute('SELECT * FROM dictionary WHERE word=?', (word,))
-                translated_sentance.append(self.cursor.fetchall())
+                translated_sentance[word] = self.cursor.fetchall()
         return translated_sentance
     
     def set_version(self, version):

@@ -3,6 +3,7 @@ from modules.screen_capture import capture_screen_region
 from modules.translator import translate
 from modules.OCR import find_text_in_image
 from modules.popup import TranslationPopup
+from modules.dictonary_window import DictionaryWindow
 from modules.selection_tool import select_screen_region
 from modules.main_window import MainWindow
 from PIL import Image
@@ -38,21 +39,38 @@ def main():
     if dictionary:
         print("Dictionary mode is enabled")
 
-    def translate_from_region():
-        region = select_screen_region()
-        if region:
-            text = find_text_in_image(capture_screen_region(region), isFile=True)
-            print("text: " + str(text))
-            translated_text = translate(str(text), language)
-            print(translated_text)
-            popup = TranslationPopup(root, translated_text, mouse.position[0], mouse.position[1])
-            popup.show()
+        def translate_from_dictionary():
+            region = select_screen_region()
+            if region:
+                text = find_text_in_image(capture_screen_region(region), isFile=True)
+                print("text: " + str(text))
+                translated_text = translate(str(text), dictionary_language)
+                print(translated_text)
+                popup = DictionaryWindow(root, translated_text, mouse.position[0], mouse.position[1])
+                popup.show()
+        
+        def monitor_to_translate():
+            print("Monitoring for keybind...")
+            keybind_listen(translate_from_dictionary, main_keybind, kill_keybind)
 
-    def monitor_to_translate():
-        print("Monitoring for keybind...")
-        keybind_listen(translate_from_region, main_keybind, kill_keybind)
+        monitor_to_translate()
 
-    monitor_to_translate()
+    else: 
+        def translate_from_region():
+            region = select_screen_region()
+            if region:
+                text = find_text_in_image(capture_screen_region(region), isFile=True)
+                print("text: " + str(text))
+                translated_text = translate(str(text), language)
+                print(translated_text)
+                popup = TranslationPopup(root, translated_text, mouse.position[0], mouse.position[1])
+                popup.show()
+
+        def monitor_to_translate():
+            print("Monitoring for keybind...")
+            keybind_listen(translate_from_region, main_keybind, kill_keybind)
+
+        monitor_to_translate()
 
 
 root = tk.Tk()
