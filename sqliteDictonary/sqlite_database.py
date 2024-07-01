@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 class sqliteDictonary:
-    def __init__(self, language):
+    def __init__(self, language, user_version=1):
         self.language = language
         db_folder = os.path.join(os.path.dirname(__file__), 'databases')        
         os.makedirs(db_folder, exist_ok=True)
@@ -11,42 +11,70 @@ class sqliteDictonary:
         self.cursor = self.conn.cursor()
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS dictionary (
                             word TEXT, 
-                            meaning TEXT,
+                            definition TEXT,
+                            wordtype TEXT,
                             example TEXT,
                             synonyms TEXT,
-                            antonyms TEXT
+                            antonyms TEXT,
+                            UNIQUE(word, meaning)
                             )''')
         self.conn.commit()
 
-    def add_word(self, word, meaning, example, synonyms, antonyms):
-        self.cursor.execute('INSERT INTO dictionary VALUES (?, ?, ?, ?, ?)', (word, meaning, example, synonyms, antonyms))
-        self.conn.commit()
+    def add_word(self, word, definitions):
+        for definition in definitions:
+            wordtype = definition.get('wordtype', '')
+            example = definition.get('example', '')
+            synonyms = definition.get('synonyms', '')
+            antonyms = definition.get('antonyms', '')
 
-    def add_batch_words(self, words):
-        self.cursor.executemany('INSERT INTO dictionary VALUES (?, ?, ?, ?, ?)', words)
+            try: 
+                self.cursor.execute('INSERT INTO dictionary VALUES (?, ?, ?, ?, ?, ?)', 
+                                (word, definition['definition'], wordtype, example, synonyms, antonyms))
+            except sqlite3.IntegrityError: pass
         self.conn.commit()
 
     def delete_word(self, word):
         self.cursor.execute('DELETE FROM dictionary WHERE word=?', (word,))
         self.conn.commit()
 
-    def update_word(self, word, meaning, example, synonyms, antonyms):
-        self.cursor.execute('UPDATE dictionary SET meaning=?, example=?, synonyms=?, antonyms=? WHERE word=?', (meaning, example, synonyms, antonyms, word))
+    def update_word(self, word, definitions):
+        for definition in definitions:
+            wordtype = definition.get('wordtype', '')
+            example = definition.get('example', '')
+            synonyms = definition.get('synonyms', '')
+            antonyms = definition.get('antonyms', '')
+
+            try:
+                self.cursor.execute('UPDATE dictionary SET definition=?, wordtype=?, example=?, synonyms=?, antonyms=? WHERE word=?', 
+                                (definition['definition'], wordtype, example, synonyms, antonyms, word))
+            except sqlite3.IntegrityError: pass
         self.conn.commit()
 
-    def update_batch_words(self, words):
-        self.cursor.executemany('UPDATE dictionary SET meaning=?, example=?, synonyms=?, antonyms=? WHERE word=?', words)
-        self.conn.commit()
-
-    def get_word(self, word):
+    def search_word(self, word):
         self.cursor.execute('SELECT * FROM dictionary WHERE word=?', (word,))
-        return self.cursor.fetchone()
+        return self.cursor.fetchall()
     
     def set_version(self, version):
         self.cursor.execute('PRAGMA user_version = ?', (version,))
+        self.conn.commit()
+
+    def clear_duplicated_and_add_unique_constraint(self):
+        self.cursor.execute('CREATE TABLE temp AS SELECT DISTINCT * FROM dictionary')
+        self.cursor.execute('DROP TABLE dictionary')
+        self.cursor.execute('ALTER TABLE temp RENAME TO dictionary')
+        self.cursor.execute('CREATE UNIQUE INDEX idx_word_meaning ON dictionary (word, definition)')
         self.conn.commit()
 
     def get_version(self):
         self.cursor.execute('PRAGMA user_version')
         return self.cursor.fetchone()[0]
     
+if __name__ == "__main__":
+    db = sqliteDictonary("english")
+    db.add_word("hello", [{'definition': 'used as a greeting or to begin a conversation', 'synonyms': 'hi', 'antonyms': 'goodbye'}])
+    db.add_word("world", [{'definition': 'the earth, together with all of its countries and peoples', 'synonyms': 'earth', 'antonyms': 'universe'}])
+    db.add_word("python", [{'definition': 'a high-level programming language', 'synonyms': 'programming language', 'antonyms': 'assembly language'}])
+    print(db.search_word("hello"))
+    print(db.search_word("world"))
+    print(db.search_word("python"))
+    print(db.get_version())

@@ -21,15 +21,22 @@ def main():
     except FileNotFoundError:
         print("No settings file found, using default settings")
         settings = {
-            "languages": "en",
+            "main_language": "english",
             "main_keybind": "crtl+alt+h",
-            "kill_keybind": "crtl+alt+k"
+            "kill_keybind": "crtl+alt+k",
+            "dictionary": False,
+            "dictionary_language": "english"
         }
 
     # Load settings
     main_keybind = settings['main_keybind']
     kill_keybind = settings['kill_keybind']
-    language = settings['languages']
+    language = settings['main_language']
+    dictionary = settings['dictionary']
+    dictionary_language = settings['dictionary_language']
+    
+    if dictionary:
+        print("Dictionary mode is enabled")
 
     def translate_from_region():
         region = select_screen_region()

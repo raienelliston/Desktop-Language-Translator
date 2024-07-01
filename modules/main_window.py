@@ -46,17 +46,23 @@ class MainWindow:
         self.dictonary_checkbox = tk.Checkbutton(self.root)
         self.dictonary_checkbox.grid(row=3, column=1, padx=10, pady=10)
 
+        # Dictionary Language Configuration
+        self.dictionary_language_label = tk.Label(self.root, text="Dictionary Language:")
+        self.dictionary_language_label.grid(row=4, column=0, padx=10, pady=10)
+        self.dictionary_language_entry = tk.Entry(self.root, width=30)
+        self.dictionary_language_entry.grid(row=4, column=1, padx=10, pady=10)
+
         # Save Button
         self.save_button = tk.Button(self.root, text="Save Settings", command=self.save_settings)
-        self.save_button.grid(row=4, column=0, columnspan=3, pady=10)
-
-        # Start Button
-        self.start_button = tk.Button(self.root, text="Start", command=self.start_application)
-        self.start_button.grid(row=5, column=0, columnspan=3, pady=10)
+        self.save_button.grid(row=5, column=0, columnspan=3, pady=10)
 
         # Alert Label
         self.alert_label = tk.Label(self.root, text="", fg='red')
-        self.alert_label.grid(row=4, column=1, pady=10, padx=10)
+        self.alert_label.grid(row=5, column=1, pady=10, padx=10)
+
+        # Start Button
+        self.start_button = tk.Button(self.root, text="Start", command=self.start_application)
+        self.start_button.grid(row=6, column=0, columnspan=3, pady=10)
 
     def start_application(self):
         self.save_settings()
@@ -73,10 +79,11 @@ class MainWindow:
         except FileNotFoundError:
             print("No settings file found, using default settings")
             settings = {
-                "languages": "english",
+                "main_language": "english",
                 "main_keybind": "<ctrl>+<alt>+h",
                 "kill_keybind": "<ctrl>+<alt>+k",
-                "dictionary": False
+                "dictionary": False,
+                "dictionary_language": "english"
             }
 
         return settings
@@ -84,9 +91,11 @@ class MainWindow:
     def load_settings(self):
         settings = self._read_settings_file()
 
-        languages = settings.get("languages", "")
+        languages = settings.get("main_language", "")
         main_keybind = settings.get("main_keybind", "")
         kill_keybind = settings.get("kill_keybind", "")
+        dictionary = settings.get("dictionary", False)
+        dictionary_language = settings.get("dictionary_language", "")
 
         if languages in self.languages_list:
             idx = self.languages_list.index(languages)
@@ -94,6 +103,8 @@ class MainWindow:
 
         self.main_keybind_entry.insert(0, main_keybind)
         self.kill_keybind_entry.insert(0, kill_keybind)
+        self.dictonary_checkbox.select() if dictionary else self.dictonary_checkbox.deselect()
+        self.dictionary_language_entry.insert(0, dictionary_language)
 
     def save_settings(self):
         selected_languages = [self.languages_list[idx] for idx in self.language_listbox.curselection()]
@@ -110,9 +121,11 @@ class MainWindow:
             return
 
         settings = {
-            "languages": languages,
+            "main_language": languages,
             "main_keybind": main_keybind,
-            "kill_keybind": kill_keybind
+            "kill_keybind": kill_keybind,
+            "dictionary": self.dictonary_checkbox.instate(['selected']),
+            "dictionary_language": self.dictionary_language_entry.get()
         }
 
         with open("settings.txt", "w") as settings_file:
