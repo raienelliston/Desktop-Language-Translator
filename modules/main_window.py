@@ -40,17 +40,23 @@ class MainWindow:
         self.kill_keybind_entry = tk.Entry(self.root, width=30)
         self.kill_keybind_entry.grid(row=2, column=1, padx=10, pady=10)
 
+        # Dictionary Add-on Configuration
+        self.dictonary_label = tk.Label(self.root, text="Dictionary Add-on:")
+        self.dictonary_label.grid(row=3, column=0, padx=10, pady=10)
+        self.dictonary_checkbox = tk.Checkbutton(self.root)
+        self.dictonary_checkbox.grid(row=3, column=1, padx=10, pady=10)
+
         # Save Button
         self.save_button = tk.Button(self.root, text="Save Settings", command=self.save_settings)
-        self.save_button.grid(row=3, column=0, columnspan=3, pady=10)
+        self.save_button.grid(row=4, column=0, columnspan=3, pady=10)
 
         # Start Button
         self.start_button = tk.Button(self.root, text="Start", command=self.start_application)
-        self.start_button.grid(row=4, column=0, columnspan=3, pady=10)
+        self.start_button.grid(row=5, column=0, columnspan=3, pady=10)
 
         # Alert Label
         self.alert_label = tk.Label(self.root, text="", fg='red')
-        self.alert_label.grid(row=3, column=1, pady=10, padx=10)
+        self.alert_label.grid(row=4, column=1, pady=10, padx=10)
 
     def start_application(self):
         self.save_settings()
@@ -69,7 +75,8 @@ class MainWindow:
             settings = {
                 "languages": "english",
                 "main_keybind": "<ctrl>+<alt>+h",
-                "kill_keybind": "<ctrl>+<alt>+k"
+                "kill_keybind": "<ctrl>+<alt>+k",
+                "dictionary": False
             }
 
         return settings
