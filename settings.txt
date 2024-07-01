@@ -1,3 +1,5 @@
 main_language=chinese (simplified)
 main_keybind=<ctrl>+<alt>+h
 kill_keybind=<ctrl>+<alt>+d
+dictionary=False
+dictionary_language=

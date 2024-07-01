@@ -16,7 +16,7 @@ class TranslationPopup:
         self.root.geometry(f"+{self.x}+{self.y}")
         self.root.attributes("-topmost", True)
 
-        label = tk.Label(self.root, text=self.text, bg='yellow', fg='black')
+        label = tk.Label(self.root, text=self.text, bg='white', fg='black')
         label.pack()
 
     def show(self):

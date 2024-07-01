@@ -41,10 +41,11 @@ class MainWindow:
         self.kill_keybind_entry.grid(row=2, column=1, padx=10, pady=10)
 
         # Dictionary Add-on Configuration
-        self.dictonary_label = tk.Label(self.root, text="Dictionary Add-on:")
-        self.dictonary_label.grid(row=3, column=0, padx=10, pady=10)
-        self.dictonary_checkbox = tk.Checkbutton(self.root)
-        self.dictonary_checkbox.grid(row=3, column=1, padx=10, pady=10)
+        self.dictionary_label = tk.Label(self.root, text="Dictionary Add-on:")
+        self.dictionary_label.grid(row=3, column=0, padx=10, pady=10)
+        self.dictionary_checkbox_var = tk.BooleanVar()
+        self.dictionary_checkbox = tk.Checkbutton(self.root, variable=self.dictionary_checkbox_var)
+        self.dictionary_checkbox.grid(row=3, column=1, padx=10, pady=10)
 
         # Dictionary Language Configuration
         self.dictionary_language_label = tk.Label(self.root, text="Dictionary Language:")
@@ -103,7 +104,7 @@ class MainWindow:
 
         self.main_keybind_entry.insert(0, main_keybind)
         self.kill_keybind_entry.insert(0, kill_keybind)
-        self.dictonary_checkbox.select() if dictionary else self.dictonary_checkbox.deselect()
+        self.dictionary_checkbox_var.set(dictionary)
         self.dictionary_language_entry.insert(0, dictionary_language)
 
     def save_settings(self):
@@ -124,7 +125,7 @@ class MainWindow:
             "main_language": languages,
             "main_keybind": main_keybind,
             "kill_keybind": kill_keybind,
-            "dictionary": self.dictonary_checkbox.instate(['selected']),
+            "dictionary": self.dictionary_checkbox_var.get(),
             "dictionary_language": self.dictionary_language_entry.get()
         }
 
