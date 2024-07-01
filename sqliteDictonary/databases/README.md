@@ -1,0 +1,1 @@
+This is where all sqlite databases are stored. If you put one in here, put the language that it's for on the first line of the file. If you don't, it will not be seen by the module.
