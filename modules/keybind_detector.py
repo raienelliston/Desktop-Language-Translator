@@ -4,25 +4,29 @@ from plyer import notification
 from time import sleep
 
 def keybind_listen(func, main_keybind='<ctrl>+<alt>+h', kill_keybind='<ctrl>+<alt>+k'):
+    loop = True
+    while loop:
+        loop = main_loop(func, main_keybind, kill_keybind)
+
+def main_loop(func, main_keybind='<ctrl>+<alt>+h', kill_keybind='<ctrl>+<alt>+k'):
     def for_canonical(f):
         return lambda k: f(l.canonical(k))
 
     def runFunc():
-        for i in main_keybind.split('+'):
-            main_hotkey.release(i)
-        for i in kill_keybind.split('+'):
-            kill_hotkey.release(i)
+        l.stop()
         func()
+        return True
 
     def stop():
         notification.notify(
-            title='Keybind Listener',
+            title='Desktop Translator',
             message='Exiting listener...',
-            app_name='Keybind Listener',
+            app_name='Desktop Translator',
             timeout=5
         )
         sleep(5)
-        exit()
+        l.stop()
+        return False
 
     main_hotkey = keyboard.HotKey(
         keyboard.HotKey.parse(main_keybind),
@@ -42,8 +46,8 @@ def keybind_listen(func, main_keybind='<ctrl>+<alt>+h', kill_keybind='<ctrl>+<al
         kill_hotkey.release(k)
 
     l = keyboard.Listener(
-            on_press=for_canonical(press),
-            on_release=for_canonical(release))
+        on_press=for_canonical(press),
+        on_release=for_canonical(release))
     
     l.start()
     l.join()

@@ -7,8 +7,8 @@ def get_definition(word):
     if response.status_code == 200:
         data = response.json()
         if data:
-            definition =  data[0]['meanings'][0]['definitions'][0]['definition']
-    return None
+            return data[0]['meanings'][0]['definitions'][0]['definition']
+    return definition
 
 def get_synonyms(word):
     response = requests.get(API_URL + word)
@@ -27,9 +27,9 @@ def get_antonyms(word):
     return None
 
 if __name__ == "__main__":
-    definition = get_definition("hello")
+    definition = get_definition("test")
     print(definition)
-    synonyms = get_synonyms("hello")
+    synonyms = get_synonyms("test")
     print(synonyms)
-    antonyms = get_antonyms("hello")
+    antonyms = get_antonyms("test")
     print(antonyms)
